@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Student Enrollment Form</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+
+    </head>
+    <body>
+        <div class="container">
+            <h2>Student Enrollment Form</h2>
+            <form id="studentForm" method="post">
+                <div class="form-group">
+                   <span><label for="rollNo">Roll No:</label> <label id="rollNoMsg">
+                        </label></span>
+                    <input type="number" class="form-control" id="rollNo" name="rollNo" placeholder="Enter Roll No" required>
+                </div>
+                <div class="form-group">
+                    <label for="fullName">Full Name:</label>
+                    <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter Full Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="class">Class:</label>
+                    <input type="text" class="form-control" id="class" name="class" placeholder="Enter Class" required>
+                </div>
+                <div class="form-group">
+                    <label for="birthDate">Birth Date:</label>
+                    <input type="date" class="form-control" id="birthDate" name="birthDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <textarea class="form-control" id="address" name="address" placeholder="Enter Address" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="enrollmentDate">Enrollment Date:</label>
+                    <input type="date" class="form-control" id="enrollmentDate" name="enrollmentDate" required>
+                </div>
+                <input type="button" class="btn btn-primary" id="saveStudent" value="Save" onclick="saveStudent();">
+            </form>
+        </div>
+
+        <script>
+            function validateAndGetFormData() {
+                var rollNoVar = $("#rollNo").val();
+                if (rollNoVar === "") {
+                    alert("Roll No is Required");
+                    $("#rollNo").focus();
+                    return "";
+                }
+                var fullNameVar = $("#fullName").val();
+                if (fullNameVar === "") {
+                    alert("Full Name is Required");
+                    $("#fullName").focus();
+                    return "";
+                }
+                var classVar = $("#class").val();
+                if (classVar === "") {
+                    alert("Class is Required");
+                    $("#class").focus();
+                    return "";
+                }
+                var birthDateVar = $("#birthDate").val();
+                if (birthDateVar === "") {
+                    alert("Birth Date is Required");
+                    $("#birthDate").focus();
+                    return "";
+                }
+                var addressVar = $("#address").val();
+                if (addressVar === "") {
+                    alert("Address is Required");
+                    $("#address").focus();
+                    return "";
+                }
+                var enrollmentDateVar = $("#enrollmentDate").val();
+                if (enrollmentDateVar === "") {
+                    alert("Enrollment Date is Required");
+                    $("#enrollmentDate").focus();
+                    return "";
+                }
+                var jsonStrObj = {
+                    rollNo: rollNoVar,
+                    fullName: fullNameVar,
+                    class: classVar,
+                    birthDate: birthDateVar,
+                    address: addressVar,
+                    enrollmentDate: enrollmentDateVar
+                };
+                return JSON.stringify(jsonStrObj);
+            }
+
+            function resetForm() {
+                $("#rollNo").val("");
+                $("#fullName").val("");
+                $("#class").val("");
+                $("#birthDate").val("");
+                $("#address").val("");
+                $("#enrollmentDate").val("");
+                $("#rollNo").focus();
+            }
+            function saveStudent() {
+                var jsonStr = validateAndGetFormData();
+                if (jsonStr === "") {
+                    return;
+                }
+                var putReqStr = createPUTRequest("90932091|-31949219095707845|90962013",
+                        jsonStr, "STUDENT-TABLE", "SCHOOL-DB");
+                alert(putReqStr);
+                jQuery.ajaxSetup({async: false});
+                var resultObj = executeCommandAtGivenBaseUrl(putReqStr,
+                        "http://api.login2explore.com:5577", "/api/iml");
+                jQuery.ajaxSetup({async: true});
+
+                alert(JSON.stringify(resultObj));
+
+                resetForm();
+            }
+
+        </script>
+    </body>
+</html>
